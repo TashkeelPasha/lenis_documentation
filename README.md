@@ -369,3 +369,166 @@ The sticky column remains fixed because of position: sticky;.
 Padding/margin in the scrollable column creates the space needed to simulate scrolling.
 Lenis makes scrolling smooth, while Intersection Observer adds interactivity.
 
+
+## Horizontal Scroll Effect with Sticky Elements
+This guide helps participants create a horizontal scrolling effect where a list of items scrolls horizontally while staying visually engaging. It uses HTML, CSS, and JavaScript with smooth scrolling and sticky elements.
+
+🛠️ Understanding the Concept
+1. Horizontal Scroll Basics
+Horizontal scrolling is achieved by:
+
+Wrapping the content in a container that overflows horizontally.
+Using flexbox to align items horizontally in a row.
+The overflow behavior of the container allows the content to scroll horizontally while the page scrolls vertically.
+
+2. Sticky Wrapper
+The sticky wrapper:
+
+Keeps a heading or title fixed in the center while the horizontal scroll progresses.
+Uses the CSS property position: sticky to lock the element in place.
+The transform: translateY(-50%); ensures the sticky element stays perfectly aligned in the viewport's center.
+
+3. Horizontal Content Behavior
+The horizontally scrollable section contains:
+
+A flex container (display: flex) to align items in a single row.
+Individual list items styled as cards with spacing and visual separation.
+4. Dynamic Scrolling with Lenis and JavaScript
+To make the effect interactive:
+
+Use JavaScript to calculate the scroll position.
+Adjust the transform property of items dynamically based on scroll values.
+This creates an illusion of controlled motion, enhancing the user experience.
+
+✍️ Steps to Build the Effect
+Step 1: Define the HTML Structure
+Create a section to hold the horizontal scroll content.
+Use a sticky wrapper for the heading and a scrollable container for the items.
+Logic:
+
+The sticky wrapper locks the heading in place while content scrolls.
+The container is styled for horizontal scrolling, holding items in a row.
+```html
+<section class="horizontal-scroll-section">
+  <div class="horizontal-wrapper-sticky">
+    <h2>Horizontal Scroll Section</h2>
+    <ul class="card-list">
+      <div class="container">
+        <li>Lorem Ipsum dolor</li>
+        <li>Lorem Ipsum dolor</li>
+        <li>Lorem Ipsum dolor</li>
+        <li>Lorem Ipsum dolor</li>
+        <li>Lorem Ipsum dolor</li>
+      </div>
+    </ul>
+  </div>
+</section>
+```
+Step 2: Add CSS for Layout
+Use flexbox for horizontal alignment.
+Add sticky behavior to the heading.
+Style the cards for better visual appearance.
+Logic:
+
+The flex container ensures items flow horizontally.
+position: sticky on the wrapper makes the heading lock as the content scrolls.
+
+```css
+.horizontal-scroll-section {
+  margin-top: 500px; /* Add vertical spacing */
+}
+
+.horizontal-wrapper-sticky {
+  position: sticky;
+  top: calc(100vh / 2); /* Locks the wrapper at the viewport's center */
+  transform: translateY(-50%);
+  overflow: hidden;
+}
+
+.card-list {
+  display: flex;
+  gap: 100px; /* Space between cards */
+  list-style: none;
+}
+
+.container {
+  display: flex; /* Align items in a row */
+}
+
+.card-list li {
+  padding: 100px;
+  border: 1px solid lightblue;
+  position: relative;
+  counter-increment: list-counter; /* Adds a number to each card */
+
+  &:first-child {
+    margin-left: 40vw; /* Adds an initial offset */
+  }
+
+  &:before {
+    content: counter(list-counter); /* Displays the number */
+    font-size: 32px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+}
+```
+Step 3: Implement Smooth Scrolling
+Use Lenis to ensure a smooth scrolling experience:
+
+Initialize Lenis in your JavaScript.
+Hook Lenis updates to requestAnimationFrame for smooth updates.
+Logic:
+
+Lenis smoothens the scroll, enhancing visual appeal and user interaction.
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  const lenis = new Lenis();
+
+  function raf(time) {
+    lenis.raf(time); // Link Lenis updates to the animation frame
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
+});
+```
+Step 4: Add Scroll-Based Motion
+Use JavaScript to make the items dynamically adjust their position based on scroll progress.
+
+Logic:
+
+Observe the horizontal scroll section.
+Calculate the container’s width and update the transform property of its children based on the scroll position.
+```js
+document.querySelectorAll('.horizontal-scroll-section').forEach((section) => {
+  const container = section.querySelector('.container');
+
+  // Calculate position dynamically
+  window.addEventListener('scroll', () => {
+    const containerWidth = container.getBoundingClientRect().width;
+    const scrollPosition = window.scrollY;
+    
+    Array.from(container.children).forEach((item, index) => {
+      item.style.transform = `translateX(${scrollPosition - containerWidth * 0.1 * index}px)`;
+    });
+  });
+});
+```
+🛠️ Key Notes for Participants
+Sticky Wrapper:
+
+Use position: sticky to fix the heading in place.
+Ensure the sticky element is inside a scrollable container with a height larger than the viewport.
+Horizontal Scrolling:
+
+Use display: flex for horizontal alignment.
+Add spacing with gap or margins for visual clarity.
+Dynamic Motion:
+
+Use JavaScript to calculate positions dynamically.
+Update each item's position using the transform property for smooth effects.
+Smooth Scrolling:
+
+Lenis adds a polished scroll experience, improving usability.
