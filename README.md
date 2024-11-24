@@ -209,3 +209,163 @@ lenis.on('scroll', ({ scroll }) => {
 });
 ```
 
+
+## Creating a Split Sticky Scroll Effect
+
+This guide walks you through the logic and concepts behind building a split-sticky-scroll effect. Participants will learn how to make one section stay sticky while the adjacent section scrolls smoothly, using HTML, CSS, and JavaScript.
+
+### 🛠️ Understanding the Concept
+1. Split Layout Structure
+The effect works by dividing the page into two columns:
+
+Sticky Column: One column remains fixed (sticky) as you scroll.
+Scrollable Column: The adjacent column scrolls normally.
+The grid layout helps create this division, and CSS position: sticky is used to make the sticky column remain visible during the scroll.
+
+2. Sticky Behavior
+The sticky section uses the CSS property:
+
+```css
+position: sticky;
+top: <value>;
+
+position: sticky makes an element "stick" when it reaches a specified position (top, left, etc.) within its scrollable container.
+top: 50px; ensures the sticky element locks 50px from the top of the viewport as the user scrolls.
+```
+The sticky property depends on:
+
+The parent container having a defined height or overflow.
+The sticky element being inside a scrollable container.
+
+3. Scrollable Column
+The second column holds the actual scrolling content, such as paragraphs, images, or other elements. You create spacing between content blocks using padding or margins to simulate a continuous scrolling experience.
+
+4. Enhancing with Smooth Scrolling
+To make the scrolling experience seamless:
+
+Use Lenis for smooth scrolling effects.
+The library adjusts the scroll behavior to feel fluid, improving user experience.
+
+5. Adding Interactivity
+We can add interactivity as elements come into view:
+
+Use Intersection Observer to detect when elements scroll into or out of the viewport.
+Add or remove classes dynamically based on visibility, creating subtle animations like fading in/out.
+
+✍️ Steps to Build the Effect
+Here’s how participants can implement the effect step by step:
+
+Step 1: Create the HTML Structure
+Create a section to hold the sticky and scrollable columns.
+Use a grid layout to divide the content into two equal parts:
+A sticky container with a heading.
+A scrollable container with multiple blocks of text or content.
+Logic:
+
+Each block in the scrollable container should have ample spacing (padding/margin) to create a visual scrolling effect.
+The sticky container should contain the content you want visible throughout the scroll.
+
+Step 2: Add Basic CSS
+Define a grid layout using grid-template-columns to divide the sticky and scrollable sections.
+Apply position: sticky to the sticky column.
+
+Logic:
+
+Use grid-template-columns: 1fr 1fr; to split the container into two equal parts.
+Add padding to the scrollable content blocks to ensure proper spacing and simulate the scrolling effect.
+Step 3: Add Smooth Scrolling
+Integrate Lenis for smooth scrolling.
+Add a script to initialize the Lenis library and hook it to the browser's animation frame for smooth scroll updates.
+Logic:
+
+Lenis adjusts the browser’s native scrolling behavior, allowing smoother transitions and precise control over animations.
+Step 4: Detect Viewport Visibility
+Use the Intersection Observer API to detect when elements are in or out of the viewport.
+Add or remove CSS classes to trigger animations or effects.
+Logic:
+
+Intersection Observer observes a target element and fires a callback when its visibility changes.
+You can apply animations, such as fading in/out, scaling, or transforming elements, by toggling CSS classes.
+📘 Explaining Each Component
+HTML Layout
+The grid container holds two children: a sticky section and a scrollable section.
+The scrollable content is divided into multiple blocks, each styled individually for spacing and aesthetics.
+
+```html
+
+<section id="split-scroll">
+  <div class="grid">
+    <div class="sticky">
+      <h2>Sticky Section</h2>
+    </div>
+    <div class="scroll">
+      <div class="text-block">Content Block 1</div>
+      <div class="text-block">Content Block 2</div>
+      <div class="text-block">Content Block 3</div>
+    </div>
+  </div>
+</section>
+```
+CSS
+Use CSS Grid to align the two columns.
+Add position: sticky to the sticky section with a top value for the sticky behavior.
+Style the scrollable content with padding for spacing.
+```css
+.split-sticky-scroll .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.split-sticky-scroll .sticky h2 {
+  position: sticky;
+  top: 50px;
+}
+
+.split-sticky-scroll .scroll .text-block {
+  padding: 200px 0;
+  font-size: 32px;
+}
+```
+```js
+Initialize Lenis for smooth scrolling.
+Use Intersection Observer to monitor visibility of content blocks.
+Logic Breakdown:
+
+Lenis Smooth Scrolling:
+
+Lenis overrides the native scroll behavior to make the scrolling effect fluid and responsive.
+Hook Lenis updates to the requestAnimationFrame for continuous updates.
+Intersection Observer:
+
+Observe each content block and toggle classes based on visibility.
+Use these classes for animations like scaling or fading.
+javascript
+Copy code
+document.addEventListener('DOMContentLoaded', () => {
+  const lenis = new Lenis(); // Initialize Lenis
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Intersection Observer for animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+      } else {
+        entry.target.classList.remove('active');
+      }
+    });
+  });
+
+  // Apply to all text blocks
+  document.querySelectorAll('.text-block').forEach((block) => observer.observe(block));
+});
+```
+🛠️ Key Notes for Participants
+The sticky column remains fixed because of position: sticky;.
+Padding/margin in the scrollable column creates the space needed to simulate scrolling.
+Lenis makes scrolling smooth, while Intersection Observer adds interactivity.
+
