@@ -326,7 +326,7 @@ Style the scrollable content with padding for spacing.
   font-size: 32px;
 }
 ```
-```js
+
 Initialize Lenis for smooth scrolling.
 Use Intersection Observer to monitor visibility of content blocks.
 Logic Breakdown:
@@ -339,8 +339,7 @@ Intersection Observer:
 
 Observe each content block and toggle classes based on visibility.
 Use these classes for animations like scaling or fading.
-javascript
-Copy code
+```javascript
 document.addEventListener('DOMContentLoaded', () => {
   const lenis = new Lenis(); // Initialize Lenis
   function raf(time) {
@@ -672,5 +671,6 @@ Enhancing User Experience:
 
 The scaling effect adds an interactive and visually appealing element to the page.
 The animation is tied to user interaction, making it intuitive and engaging.
+
 
 
