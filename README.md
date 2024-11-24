@@ -532,3 +532,145 @@ Update each item's position using the transform property for smooth effects.
 Smooth Scrolling:
 
 Lenis adds a polished scroll experience, improving usability.
+
+
+## Scale-In Text Effect
+This guide explains the logic behind the Scale-In Text Effect, where text smoothly zooms in as the user scrolls down the page. It involves understanding scroll-triggered animations, sticky positioning, and dynamic transformations in CSS and JavaScript.
+
+🛠️ Concept Breakdown
+1. Sticky Container
+The section uses position: sticky to keep the text element fixed in the viewport while the scroll interaction progresses. This creates the illusion that the text is zooming in dynamically during scrolling.
+
+Key Idea:
+
+Sticky positioning ensures the element stays in place while its parent scrolls past.
+2. Scaling Text Dynamically
+The scaling effect is achieved using:
+
+The transform: scale() property, where the text starts at scale(0) and grows to scale(1) based on the scroll position.
+Key Idea:
+
+JavaScript calculates the visible percentage of the section relative to the viewport and adjusts the scale accordingly.
+3. Scroll Interaction
+The effect is tied to how much of the section is visible in the viewport. The JavaScript logic tracks the section's position relative to the viewport's middle point and adjusts the scaling dynamically.
+
+Key Idea:
+
+Smooth scaling is implemented using scroll-triggered animations controlled by the visibility percentage.
+✍️ Implementation Guide
+Step 1: HTML Structure
+Define the section containing the scaling text.
+
+Logic:
+
+The .sticky-container ensures the text remains fixed as the user scrolls.
+The .scale-text is the text element that scales up dynamically.
+```html
+<section id="el2" class="scale-in-text">
+  <div class="sticky-container">
+    <div class="content">
+      <p class="scale-text">Zoom<br>In</p>
+    </div>
+  </div>
+</section>
+```
+Step 2: CSS for Layout and Styling
+Apply styles for the sticky container, full-height section, and scaling text.
+
+Logic:
+
+.scale-in-text: This section spans the viewport height for a smooth scroll effect.
+.sticky-container: Keeps the text fixed in the center.
+.scale-text: Positioned at the center and scaled dynamically using transform-origin.
+```css
+.scale-in-text {
+  height: 1000vh; /* Long enough to allow scrolling interaction */
+  position: relative; /* Ensure relative positioning for sticky container */
+
+  .sticky-container {
+    position: sticky; /* Locks the container at the viewport */
+    top: 0;
+    height: 100vh;
+    overflow: hidden; /* Prevents overflow content */
+    margin: 0 auto;
+
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .scale-text {
+    font-size: 300px; /* Large initial size */
+    font-weight: 900;
+    text-transform: uppercase;
+    line-height: 0.8;
+    text-align: center;
+    position: absolute; /* Centered within the section */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0); /* Start at scale 0 */
+    transform-origin: center; /* Center as scaling origin */
+    margin: 0;
+  }
+}
+```
+Step 3: Scroll Logic with JavaScript
+Use JavaScript to calculate how much of the section is visible and scale the text accordingly.
+
+Logic:
+
+Visibility Percentage:
+Calculate the section's position relative to the viewport's middle point.
+Use the getBoundingClientRect() method to determine the section's height and position.
+Dynamic Scaling:
+Update the text's transform property with the calculated scale value.
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+  const scaleInTextSections = document.querySelectorAll('.scale-in-text');
+
+  scaleInTextSections.forEach((section) => {
+    const textElement = section.querySelector('.scale-text');
+
+    window.addEventListener('scroll', () => {
+      const { top, bottom } = section.getBoundingClientRect();
+      const sectionHeight = bottom - top;
+      const viewportMiddle = window.innerHeight / 2;
+      const sectionMiddle = (top + bottom) / 2;
+
+      let percentageVisible = 0;
+
+      if (sectionMiddle < viewportMiddle) {
+        // Section is moving above the middle
+        percentageVisible = 1 - Math.max(bottom - viewportMiddle, 0) / sectionHeight;
+      } else if (sectionMiddle > viewportMiddle) {
+        // Section is moving below the middle
+        percentageVisible = Math.max((viewportMiddle - top) / sectionHeight, 0);
+      }
+
+      // Apply the calculated scale to the text
+      textElement.style.transform = `translate(-50%, -50%) scale(${percentageVisible})`;
+    });
+  });
+});
+```
+🛠️ Key Points to Highlight for Participants
+Sticky Positioning:
+
+The sticky container locks the text element in place while allowing it to animate as the user scrolls.
+This is achieved using position: sticky and top: 0.
+Dynamic Scaling:
+
+The transform: scale() property adjusts the size of the text smoothly based on scroll position.
+The origin is set to the center using transform-origin: center.
+Scroll Position Tracking:
+
+Use JavaScript to determine the section's visibility percentage relative to the viewport.
+The percentage is used as the scale factor, ensuring smooth transitions.
+Enhancing User Experience:
+
+The scaling effect adds an interactive and visually appealing element to the page.
+The animation is tied to user interaction, making it intuitive and engaging.
+
+
